@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "mode": "essential",
   "description": "Essential security patterns (15) - Code execution, prompt injection, dangerous commands",
   "failure_thresholds": {

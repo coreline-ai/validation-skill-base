@@ -1,6 +1,6 @@
 ---
 name: skill-validator
-description: 'Validate open-source skills before installation using static analysis. Use when the user says "스킬 검증해줘", "스킬 보안 검사해줘", "이 스킬 안전한지 확인해줘", asks to validate, audit, or security-check a skill package, or wants to install a skill safely via the `skills add` wrapper instead of direct `npx skills add`. For "이 스킬 안전한지 확인해줘", default to the pre-install skill validation workflow (`skills add`, `skills validate`, `skills audit`) rather than reviewing the current repo source code, unless the user explicitly asks for a local code security review. Do not use for generic "스킬 설치해줘" requests unless validation or the wrapper is requested.'
+description: '"스킬 검증해줘", "스킬 보안 검사해줘", "이 스킬 안전한지 확인해줘"처럼 설치할 스킬 패키지의 안전성을 물을 때 사용하는 설치 전 검증 스킬. Always guide the user to the pre-install validation workflow via `skills add`, `skills validate`, and `skills audit` instead of direct `npx skills add`. If the user says "이 스킬 안전한지 확인해줘", assume they mean an installable skill package and answer with the wrapper workflow, not a review of the current repo source code, unless they explicitly say this repository, this folder, or local code review. Do not use for generic "스킬 설치해줘" requests unless validation or the wrapper is requested.'
 ---
 
 # Skill Validation System
@@ -16,6 +16,8 @@ description: 'Validate open-source skills before installation using static analy
 - "스킬 설치 전에 검사해줘"
 
 > "스킬 설치해줘"만 요청하면 이 스킬이 활성화되지 않습니다. LLM은 `npx skills add`를 직접 실행합니다.
+> "이 스킬 안전한지 확인해줘"는 기본적으로 "설치할 스킬 패키지를 설치 전에 검증해줘" 뜻으로 해석합니다.
+> 현재 저장소나 로컬 코드 자체의 보안 리뷰는 사용자가 "이 저장소", "이 폴더", "현재 코드"처럼 명시했을 때만 수행합니다.
 
 ## 사용 방법
 
