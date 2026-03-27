@@ -1,0 +1,478 @@
+{
+  "version": "1.1.0",
+  "mode": "thorough",
+  "description": "Thorough security patterns (58) - All security, privacy, malware, structure, and obfuscation checks",
+  "failure_thresholds": {
+    "critical": 0,
+    "high": 2,
+    "medium": 5
+  },
+  "patterns": [
+    {
+      "id": "api_key_openai",
+      "name": "OpenAI API Key",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "sk-[a-zA-Z0-9]{48}",
+      "description": "OpenAI API key detected in code"
+    },
+    {
+      "id": "api_key_anthropic",
+      "name": "Anthropic API Key",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "sk-ant-[a-zA-Z0-9]{95}",
+      "description": "Anthropic API key detected in code"
+    },
+    {
+      "id": "api_key_generic",
+      "name": "Generic API Key",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "api[_-]?key\\s*=\\s*['\"][^'\"]{10,}['\"]",
+      "description": "Generic API key assignment found"
+    },
+    {
+      "id": "secret_generic",
+      "name": "Generic Secret",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "secret\\s*=\\s*['\"][^'\"]{10,}['\"]",
+      "description": "Secret assignment found"
+    },
+    {
+      "id": "token_generic",
+      "name": "Generic Token",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "token\\s*=\\s*['\"][^'\"]{10,}['\"]",
+      "description": "Token assignment found"
+    },
+    {
+      "id": "password_hardcoded",
+      "name": "Hardcoded Password",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "(?i)password\\s*=\\s*['\\\"](?!placeholder\\b|example(?:123)?\\b|changeme\\b|dummy\\b|sample\\b|test\\b|your[_-]?password\\b)[^'\\\"]{8,}['\\\"]",
+      "description": "Hardcoded password detected"
+    },
+    {
+      "id": "aws_access_key",
+      "name": "AWS Access Key",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "AWS_ACCESS_KEY_ID\\s*=\\s*['\"]?[A-Z0-9]{20}['\"]?",
+      "description": "AWS access key detected"
+    },
+    {
+      "id": "aws_secret_key",
+      "name": "AWS Secret Key",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "AWS_SECRET_ACCESS_KEY\\s*=\\s*['\"]?[A-Za-z0-9+/]{40}['\"]?",
+      "description": "AWS secret key detected"
+    },
+    {
+      "id": "github_token",
+      "name": "GitHub Token",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "gh[pousr]_[a-zA-Z0-9]{36,255}",
+      "description": "GitHub personal access token detected"
+    },
+    {
+      "id": "private_key",
+      "name": "Private Key",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "-----BEGIN [A-Z]+ PRIVATE KEY-----",
+      "description": "Private key detected"
+    },
+    {
+      "id": "dangerous_rm_root",
+      "name": "rm -rf from root",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "rm\\s+-rf\\s+/",
+      "description": "Dangerous command: rm -rf from root directory"
+    },
+    {
+      "id": "dangerous_rm_dot",
+      "name": "rm -rf . (current directory)",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "rm\\s+-rf\\s+\\.\\s*$",
+      "description": "Dangerous command: rm -rf current directory"
+    },
+    {
+      "id": "dangerous_eval_dollar",
+      "name": "eval with variable",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "eval\\s*\\(\\s*\\$",
+      "description": "Dangerous eval with variable expansion"
+    },
+    {
+      "id": "dangerous_exec_dollar",
+      "name": "exec with variable",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "exec\\s*\\(\\s*\\$",
+      "description": "Dangerous exec with variable expansion"
+    },
+    {
+      "id": "dangerous_system_dollar",
+      "name": "system with variable",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "(os\\.)?system\\s*\\(\\s*\\$",
+      "description": "Dangerous system call with variable"
+    },
+    {
+      "id": "dangerous_subprocess_shell",
+      "name": "subprocess with shell=True",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "subprocess\\.(call|run|Popen)\\([^)]*shell\\s*=\\s*True",
+      "description": "subprocess with shell=True can be unsafe"
+    },
+    {
+      "id": "dangerous_curl_pipe",
+      "name": "curl | bash",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "curl\\s+[^|]*\\|\\s*bash",
+      "description": "Piping curl to bash is dangerous"
+    },
+    {
+      "id": "dangerous_wget_pipe",
+      "name": "wget | sh",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "wget\\s+[^|]*\\|\\s*sh",
+      "description": "Piping wget to shell is dangerous"
+    },
+    {
+      "id": "dangerous_chmod_777",
+      "name": "chmod 777",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "chmod\\s+777",
+      "description": "chmod 777 gives excessive permissions"
+    },
+    {
+      "id": "dangerous_dd_dev_zero",
+      "name": "dd to /dev/sda",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "dd\\s+.*of=/dev/sd[a-z]",
+      "description": "dd to disk can destroy data"
+    },
+    {
+      "id": "email_address",
+      "name": "Email Address",
+      "severity": "MEDIUM",
+      "category": "privacy",
+      "regex": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+      "description": "Email address detected"
+    },
+    {
+      "id": "phone_korean",
+      "name": "Korean Phone Number",
+      "severity": "MEDIUM",
+      "category": "privacy",
+      "regex": "\\d{2,3}-\\d{3,4}-\\d{4}",
+      "description": "Phone number detected"
+    },
+    {
+      "id": "credit_card",
+      "name": "Credit Card Number",
+      "severity": "CRITICAL",
+      "category": "privacy",
+      "regex": "\\b\\d{4}[ -]\\d{4}[ -]\\d{4}[ -]\\d{4}\\b",
+      "description": "Credit card number pattern detected"
+    },
+    {
+      "id": "ip_address",
+      "name": "IP Address",
+      "severity": "LOW",
+      "category": "privacy",
+      "regex": "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
+      "description": "IP address detected"
+    },
+    {
+      "id": "ipv6_address",
+      "name": "IPv6 Address",
+      "severity": "LOW",
+      "category": "privacy",
+      "regex": "([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}",
+      "description": "IPv6 address detected"
+    },
+    {
+      "id": "ssn_pattern",
+      "name": "Social Security Number",
+      "severity": "CRITICAL",
+      "category": "privacy",
+      "regex": "\\b\\d{3}-\\d{2}-\\d{4}\\b",
+      "description": "SSN pattern detected"
+    },
+    {
+      "id": "korean_rrn",
+      "name": "Korean Resident Number",
+      "severity": "CRITICAL",
+      "category": "privacy",
+      "regex": "\\b\\d{6}-\\d{7}\\b",
+      "description": "Korean RRN pattern detected"
+    },
+    {
+      "id": "external_fetch",
+      "name": "fetch() External Request",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "fetch\\s*\\(\\s*['\"]https?://",
+      "description": "External fetch request detected"
+    },
+    {
+      "id": "external_xhr",
+      "name": "XMLHttpRequest",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "XMLHttpRequest|\\.ajax\\(",
+      "description": "XHR/AJAX request detected"
+    },
+    {
+      "id": "external_requests_post",
+      "name": "requests.post()",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "requests\\.(post|put|patch|delete)\\s*\\(",
+      "description": "External HTTP request detected"
+    },
+    {
+      "id": "external_urllib",
+      "name": "urllib.request",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "urllib\\.(request|urlopen)\\s*\\(",
+      "description": "urllib external request detected"
+    },
+    {
+      "id": "external_http_post",
+      "name": "http.post",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "http\\.(post|put|delete)\\s*\\(",
+      "description": "Angular HTTP request detected"
+    },
+    {
+      "id": "malware_keylogger",
+      "name": "Keylogger Keyword",
+      "severity": "CRITICAL",
+      "category": "malicious",
+      "regex": "(?i)\\b(keylogger|keystroke[_ -]?log|key[_ -]?stroke)",
+      "description": "Keylogger-related keyword detected"
+    },
+    {
+      "id": "malware_stealer",
+      "name": "Stealer Keyword",
+      "severity": "CRITICAL",
+      "category": "malicious",
+      "regex": "(stealer|info.?steal|data.?steal)",
+      "description": "Stealer-related keyword detected"
+    },
+    {
+      "id": "malware_ransomware",
+      "name": "Ransomware Keyword",
+      "severity": "CRITICAL",
+      "category": "malicious",
+      "regex": "ransomware|encrypt.?file|file.?encrypt",
+      "description": "Ransomware-related keyword detected"
+    },
+    {
+      "id": "malware_trojan",
+      "name": "Trojan Keyword",
+      "severity": "CRITICAL",
+      "category": "malicious",
+      "regex": "(trojan|backdoor|rootkit|botnet)",
+      "description": "Trojan/malware keyword detected"
+    },
+    {
+      "id": "malware_payload",
+      "name": "Payload Keyword",
+      "severity": "HIGH",
+      "category": "malicious",
+      "regex": "(?i)(malicious[_ -]?payload|payload\\.(?:bin|exe)|shellcode|exploit(?:kit)?)",
+      "description": "Exploit-related keyword detected"
+    },
+    {
+      "id": "malware_injection",
+      "name": "Injection Keyword",
+      "severity": "HIGH",
+      "category": "malicious",
+      "regex": "(sql.?inject|xss|csrf|code.?inject)",
+      "description": "Injection attack keyword detected"
+    },
+    {
+      "id": "file_unlink_root",
+      "name": "unlink from root",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "(unlink|rmdir)\\s*\\(\\s*['\"]/",
+      "description": "File deletion from root path"
+    },
+    {
+      "id": "file_shutil_rmtree_root",
+      "name": "shutil.rmtree from root",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "shutil\\.(rmtree|delete_tree)\\s*\\(\\s*['\"]/",
+      "description": "Directory deletion from root path"
+    },
+    {
+      "id": "network_internal_ip",
+      "name": "Internal IP URL",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "https?://(?:192\\.168\\.|10\\.|172\\.(?:1[6-9]|2[0-9]|3[01])\\.|127\\.0\\.0\\.1|localhost)",
+      "description": "Internal IP address in URL"
+    },
+    {
+      "id": "network_evil_domain",
+      "name": "Suspicious domain",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "https?://[\\w-]*\\.(evil|malicious|hack|bad|steal)[\\w-]*\\.",
+      "description": "Suspicious domain name detected"
+    },
+    {
+      "id": "network_ip_url",
+      "name": "Direct IP address URL",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "https?://(?!(?:127\\.0\\.0\\.1|localhost)(?:[:/]|$))(?!(?:10\\.|192\\.168\\.|172\\.(?:1[6-9]|2[0-9]|3[01])\\.))(?:\\d{1,3}\\.){3}\\d{1,3}(?::\\d+)?",
+      "description": "Direct IP address URL (bypasses domain checks)"
+    },
+    {
+      "id": "network_no_tld",
+      "name": "Domain without TLD",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "https?://[a-zA-Z0-9-]{3,50}/",
+      "description": "URL without proper TLD (possible internal server)"
+    },
+    {
+      "id": "network_suspicious_tld",
+      "name": "Suspicious TLD",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "https?://[\\w.-]+\\.(tk|ml|ga|cf|gq|top|xyz|pw|cc)[\\w-]*/",
+      "description": "Free/suspicious TLD often used for malware"
+    },
+    {
+      "id": "network_short_suspicious",
+      "name": "Very short suspicious URL",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "https?://[a-z0-9]{3,8}\\.(tk|ml|ga|cf|top|xyz)",
+      "description": "Short domain on suspicious TLD"
+    },
+    {
+      "id": "obfuscation_base64_long",
+      "name": "Long base64 string",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "[A-Za-z0-9+/]{80,}={0,2}",
+      "description": "Long base64 string (possible obfuscated code)"
+    },
+    {
+      "id": "obfuscation_base64_command",
+      "name": "base64 with decode/exec",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "(base64|b64decode|atob|btoa).*(eval|exec|system|\\$\\(|popen)",
+      "description": "Base64 decode followed by execution"
+    },
+    {
+      "id": "obfuscation_hex_decode",
+      "name": "Hex decode pattern",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "(\\\\x[0-9a-fA-F]{2}){5,}",
+      "description": "Multiple hex escape sequences (obfuscation)"
+    },
+    {
+      "id": "obfuscation_charcode",
+      "name": "CharCode obfuscation",
+      "severity": "MEDIUM",
+      "category": "security",
+      "regex": "String\\.fromCharCode\\([^)]{20,}\\)",
+      "description": "String.fromCharCode with many characters"
+    },
+    {
+      "id": "lfs_github_large",
+      "name": "Git LFS Pointer",
+      "severity": "LOW",
+      "category": "structure",
+      "regex": "version https://git-lfs\\.github\\.com",
+      "description": "Git LFS pointer file found"
+    },
+    {
+      "id": "structure_skill_md_missing",
+      "name": "SKILL.md Check",
+      "severity": "CRITICAL",
+      "category": "structure",
+      "regex": "",
+      "structural_only": true,
+      "description": "SKILL.md must exist (checked structurally by analyzer)"
+    },
+    {
+      "id": "structure_yaml_frontmatter",
+      "name": "YAML Frontmatter",
+      "severity": "MEDIUM",
+      "category": "structure",
+      "regex": "",
+      "structural_only": true,
+      "description": "YAML frontmatter should be present in SKILL.md (checked structurally by analyzer)"
+    },
+    {
+      "id": "owasp_llm01_prompt_inject",
+      "name": "Prompt Injection Pattern",
+      "severity": "HIGH",
+      "category": "owasp",
+      "regex": "(?im)^(?!\\s*(?:(?:#|//|/\\*|\\*)\\s|['\\\"]{1,3}))(?!\\s*do\\s+not\\b)\\s*(?:[-+]\\s+|>\\s*|\\d+\\.\\s+)?(?:ignore|forget|disregard|override|bypass)\\b.{0,100}\\b(?:instructions?|prompt|system)\\b",
+      "description": "Possible prompt injection pattern"
+    },
+    {
+      "id": "owasp_llm02_insecure_output",
+      "name": "Insecure Output Handling",
+      "severity": "HIGH",
+      "category": "owasp",
+      "regex": "(?im)^(?!\\s*(?:(?:#|//|/\\*|\\*|>|-|\\d+\\.)\\s|['\\\"]{1,3}))[^\n]*\\b(?:eval|exec|os\\.system|system)\\s*\\(",
+      "description": "Direct execution of LLM output"
+    },
+    {
+      "id": "owasp_llm06_data_disclosure",
+      "name": "Sensitive Data Disclosure",
+      "severity": "MEDIUM",
+      "category": "owasp",
+      "regex": "(?i)(?:(?:print|log|echo|write|output)[^\\n]{0,120}(?:\\$\\{?(?:password|secret|token|api[_-]?key|access[_-]?key|private[_-]?key)|(?:password|secret|token|api[_-]?key|access[_-]?key|private[_-]?key)\\s*[:=])|(?:\\$\\{?(?:password|secret|token|api[_-]?key|access[_-]?key|private[_-]?key)|(?:password|secret|token|api[_-]?key|access[_-]?key|private[_-]?key)\\s*[:=])[^\\n]{0,120}(?:print|log|echo|write|output))",
+      "description": "Possible sensitive data logging"
+    },
+    {
+      "id": "owasp_llm08_excessive_agency",
+      "name": "Excessive Agency Warning",
+      "severity": "MEDIUM",
+      "category": "owasp",
+      "regex": "(?im)^(?!\\s*(?:(?:#|//|/\\*|\\*|>|-|\\d+\\.)\\s|['\\\"{]{1,3}))[^\n]*\\b(delete|remove|destroy|wipe)\\b.{0,50}\\b(file|directory|folder|data)\\b",
+      "description": "File system modification capability"
+    },
+    {
+      "id": "npm_install_script",
+      "name": "npm install script",
+      "severity": "LOW",
+      "category": "security",
+      "regex": "(curl|wget)\\s+.*\\|\\s*(bash|sh)",
+      "description": "npm install script pattern"
+    }
+  ]
+}

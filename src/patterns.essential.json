@@ -1,0 +1,131 @@
+{
+  "version": "1.1.0",
+  "mode": "essential",
+  "description": "Essential security patterns (15) - Code execution, prompt injection, dangerous commands",
+  "failure_thresholds": {
+    "critical": 0,
+    "high": 2
+  },
+  "patterns": [
+    {
+      "id": "dangerous_eval_dollar",
+      "name": "eval with variable",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "eval\\s*\\(\\s*\\$",
+      "description": "Dangerous eval with variable expansion"
+    },
+    {
+      "id": "dangerous_exec_dollar",
+      "name": "exec with variable",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "exec\\s*\\(\\s*\\$",
+      "description": "Dangerous exec with variable expansion"
+    },
+    {
+      "id": "dangerous_system_dollar",
+      "name": "system with variable",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "(os\\.)?system\\s*\\(\\s*\\$",
+      "description": "Dangerous system call with variable"
+    },
+    {
+      "id": "dangerous_rm_root",
+      "name": "rm -rf from root",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "rm\\s+-rf\\s+/",
+      "description": "Dangerous command: rm -rf from root directory"
+    },
+    {
+      "id": "dangerous_curl_pipe",
+      "name": "curl | bash",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "curl\\s+[^|]*\\|\\s*bash",
+      "description": "Piping curl to bash is dangerous"
+    },
+    {
+      "id": "dangerous_wget_pipe",
+      "name": "wget | sh",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "wget\\s+[^|]*\\|\\s*sh",
+      "description": "Piping wget to shell is dangerous"
+    },
+    {
+      "id": "dangerous_dd_dev_zero",
+      "name": "dd to /dev/sda",
+      "severity": "CRITICAL",
+      "category": "security",
+      "regex": "dd\\s+.*of=/dev/sd[a-z]",
+      "description": "dd to disk can destroy data"
+    },
+    {
+      "id": "file_unlink_root",
+      "name": "unlink from root",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "(unlink|rmdir)\\s*\\(\\s*['\"]/",
+      "description": "File deletion from root path"
+    },
+    {
+      "id": "file_shutil_rmtree_root",
+      "name": "shutil.rmtree from root",
+      "severity": "HIGH",
+      "category": "security",
+      "regex": "shutil\\.(rmtree|delete_tree)\\s*\\(\\s*['\"]/",
+      "description": "Directory deletion from root path"
+    },
+    {
+      "id": "owasp_llm01_prompt_inject",
+      "name": "Prompt Injection Pattern",
+      "severity": "HIGH",
+      "category": "owasp",
+      "regex": "(?im)^(?!\\s*(?:(?:#|//|/\\*|\\*)\\s|['\\\"]{1,3}))(?!\\s*do\\s+not\\b)\\s*(?:[-+]\\s+|>\\s*|\\d+\\.\\s+)?(?:ignore|forget|disregard|override|bypass)\\b.{0,100}\\b(?:instructions?|prompt|system)\\b",
+      "description": "Possible prompt injection pattern"
+    },
+    {
+      "id": "owasp_llm02_insecure_output",
+      "name": "Insecure Output Handling",
+      "severity": "HIGH",
+      "category": "owasp",
+      "regex": "(?im)^(?!\\s*(?:(?:#|//|/\\*|\\*|>|-|\\d+\\.)\\s|['\\\"]{1,3}))[^\n]*\\b(?:eval|exec|os\\.system|system)\\s*\\(",
+      "description": "Direct execution of LLM output"
+    },
+    {
+      "id": "malware_keylogger",
+      "name": "Keylogger Keyword",
+      "severity": "CRITICAL",
+      "category": "malicious",
+      "regex": "(?i)\\b(keylogger|keystroke[_ -]?log|key[_ -]?stroke)",
+      "description": "Keylogger-related keyword detected"
+    },
+    {
+      "id": "malware_stealer",
+      "name": "Stealer Keyword",
+      "severity": "CRITICAL",
+      "category": "malicious",
+      "regex": "(stealer|info.?steal|data.?steal)",
+      "description": "Stealer-related keyword detected"
+    },
+    {
+      "id": "malware_ransomware",
+      "name": "Ransomware Keyword",
+      "severity": "CRITICAL",
+      "category": "malicious",
+      "regex": "ransomware|encrypt.?file|file.?encrypt",
+      "description": "Ransomware-related keyword detected"
+    },
+    {
+      "id": "malware_trojan",
+      "name": "Trojan Keyword",
+      "severity": "CRITICAL",
+      "category": "malicious",
+      "regex": "(trojan|backdoor|rootkit|botnet)",
+      "description": "Trojan/malware keyword detected"
+    }
+  ]
+}
